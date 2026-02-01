@@ -1,0 +1,435 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&family=Caveat:wght@700&display=swap");
+
+/* Base Indie Journal Styles */
+.indie-journal {
+  min-height: 100vh;
+  background: #f5f1e8;
+  color: #1a1a1a;
+  position: relative;
+  overflow-x: hidden;
+  font-family: "IBM Plex Mono", monospace;
+  cursor:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><circle cx="8" cy="8" r="3" fill="%23FF006E"/></svg>')
+      8 8,
+    auto;
+}
+
+.indie-journal * {
+  cursor: inherit;
+}
+
+.indie-journal button,
+.indie-journal a {
+  cursor:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><rect x="2" y="2" width="16" height="16" fill="%23FFBE0B" stroke="%231A1A1A" stroke-width="2"/></svg>')
+      10 10,
+    pointer;
+}
+
+/* Noise texture background */
+.indie-journal::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.03;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /></filter><rect width="200" height="200" filter="url(%23noise)" opacity="0.5"/></svg>');
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Scanline effect */
+.indie-journal::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.03),
+    rgba(0, 0, 0, 0.03) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Typography */
+.title-grotesk {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.handwriting {
+  font-family: "Caveat", cursive;
+  font-weight: 700;
+}
+
+/* Torn paper effect */
+.torn-card {
+  position: relative;
+  background: #fffef9;
+  border: 3px solid #1a1a1a;
+  box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.3);
+}
+
+.torn-card::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: linear-gradient(
+    45deg,
+    transparent 48%,
+    #1a1a1a 48%,
+    #1a1a1a 52%,
+    transparent 52%
+  );
+  background-size: 10px 10px;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+/* Tape strip */
+.tape-strip {
+  position: absolute;
+  background: rgba(255, 190, 11, 0.4);
+  border: 1px solid rgba(26, 26, 26, 0.2);
+  transform: rotate(-2deg);
+}
+
+/* Glitch effect */
+@keyframes glitch {
+  0% {
+    text-shadow:
+      2px 0 #ff006e,
+      -2px 0 #06ffa5;
+  }
+  25% {
+    text-shadow:
+      -2px 0 #ff006e,
+      2px 0 #06ffa5;
+  }
+  50% {
+    text-shadow:
+      2px 0 #06ffa5,
+      -2px 0 #ff006e;
+  }
+  75% {
+    text-shadow:
+      -2px 0 #06ffa5,
+      2px 0 #ff006e;
+  }
+  100% {
+    text-shadow:
+      2px 0 #ff006e,
+      -2px 0 #06ffa5;
+  }
+}
+
+.glitch-hover:hover {
+  animation: glitch 0.3s infinite;
+}
+
+/* Wiggle animation */
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-1deg) translateY(0);
+  }
+  25% {
+    transform: rotate(1deg) translateY(-2px);
+  }
+  75% {
+    transform: rotate(-1deg) translateY(2px);
+  }
+}
+
+.wiggle-hover:hover {
+  animation: wiggle 0.5s ease-in-out infinite;
+}
+
+/* Marker underline */
+.marker-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.marker-underline::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: -4px;
+  right: -4px;
+  height: 12px;
+  background: rgba(255, 190, 11, 0.5);
+  transform: skewX(-10deg);
+  z-index: -1;
+}
+
+/* Highlighter effect for positive */
+.highlighter-green {
+  background: linear-gradient(
+    180deg,
+    transparent 60%,
+    rgba(6, 255, 165, 0.4) 60%
+  );
+  padding: 0 4px;
+}
+
+/* Red cross-out for negative */
+.cross-out-red {
+  position: relative;
+}
+
+.cross-out-red::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -4px;
+  right: -4px;
+  height: 3px;
+  background: #ff006e;
+  transform: rotate(-5deg);
+}
+
+/* Sticky note style */
+.sticky-note {
+  background: linear-gradient(135deg, #ffbe0b 0%, #ffa500 100%);
+  border: 2px solid #1a1a1a;
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.sticky-note::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 20px 20px 0;
+  border-color: transparent #1a1a1a transparent transparent;
+}
+
+/* Progress bar hand-drawn style */
+.progress-ruler {
+  position: relative;
+  height: 8px;
+  background: #fffef9;
+  border: 3px solid #1a1a1a;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    #ff006e,
+    #ff006e 10px,
+    #ffbe0b 10px,
+    #ffbe0b 20px
+  );
+  position: relative;
+  transition: width 0.3s ease;
+}
+
+/* Ink bleed border */
+.ink-bleed {
+  border: 3px solid #1a1a1a;
+  box-shadow:
+    inset 0 0 0 1px rgba(26, 26, 26, 0.1),
+    0 0 0 1px rgba(26, 26, 26, 0.1);
+}
+
+/* Notebook lines for inputs */
+.notebook-input {
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 31px,
+    rgba(26, 26, 26, 0.1) 31px,
+    rgba(26, 26, 26, 0.1) 32px
+  );
+  background-color: #fffef9;
+  padding-top: 8px;
+  line-height: 32px;
+}
+
+/* Button marker stroke */
+.btn-marker {
+  position: relative;
+  background: #ff006e;
+  border: 3px solid #1a1a1a;
+  color: #fffef9;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 5px 5px 0px #1a1a1a;
+  transition: all 0.1s ease;
+}
+
+.btn-marker:hover {
+  box-shadow: 3px 3px 0px #1a1a1a;
+  transform: translate(2px, 2px);
+}
+
+.btn-marker:active {
+  box-shadow: 0px 0px 0px #1a1a1a;
+  transform: translate(5px, 5px);
+}
+
+.btn-secondary {
+  background: #fffef9;
+  border: 3px solid #1a1a1a;
+  color: #1a1a1a;
+  box-shadow: 4px 4px 0px #1a1a1a;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.1s ease;
+}
+
+.btn-secondary:hover {
+  box-shadow: 2px 2px 0px #1a1a1a;
+  transform: translate(2px, 2px);
+}
+
+.btn-green {
+  background: #06ffa5;
+  border: 3px solid #1a1a1a;
+  color: #1a1a1a;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 5px 5px 0px #1a1a1a;
+  transition: all 0.1s ease;
+}
+
+.btn-green:hover {
+  box-shadow: 3px 3px 0px #1a1a1a;
+  transform: translate(2px, 2px);
+}
+
+.btn-yellow {
+  background: #ffbe0b;
+  border: 3px solid #1a1a1a;
+  color: #1a1a1a;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 5px 5px 0px #1a1a1a;
+  transition: all 0.1s ease;
+}
+
+.btn-yellow:hover {
+  box-shadow: 3px 3px 0px #1a1a1a;
+  transform: translate(2px, 2px);
+}
+
+/* Polaroid style */
+.polaroid {
+  background: #fffef9;
+  border: 3px solid #1a1a1a;
+  padding: 12px;
+  padding-bottom: 40px;
+  box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.3);
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.polaroid:hover {
+  transform: rotate(0deg) scale(1.02) !important;
+}
+
+/* Checkbox custom */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #1a1a1a;
+  background: #fffef9;
+  position: relative;
+  cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+  background: #ff006e;
+}
+
+input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  top: -4px;
+  left: 2px;
+  font-size: 16px;
+  color: #fffef9;
+  font-weight: bold;
+}
+
+/* Range slider custom */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #fffef9;
+  border: 3px solid #1a1a1a;
+  height: 12px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  background: #ff006e;
+  border: 3px solid #1a1a1a;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  background: #ff006e;
+  border: 3px solid #1a1a1a;
+  cursor: pointer;
+}
+
+/* Rotation variations */
+.rotate-1 {
+  transform: rotate(1deg);
+}
+.rotate-2 {
+  transform: rotate(-2deg);
+}
+.rotate-3 {
+  transform: rotate(2deg);
+}
+
+/* Recording dot */
+@keyframes recording-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.recording-dot {
+  width: 12px;
+  height: 12px;
+  background: #ff006e;
+  border-radius: 50%;
+  animation: recording-pulse 1.5s infinite;
+}
