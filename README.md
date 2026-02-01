@@ -1,1 +1,1 @@
-# the-traders-journal
+# The Trader's Journal
