@@ -1,16 +1,130 @@
-# React + Vite
+# 📈 The Trader’s Journal
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An AI-powered trading journal analyzer that helps traders identify **patterns, mistakes, emotional biases, and risk management issues** from their past trades.
 
-Currently, two official plugins are available:
+Instead of just logging trades, _The Trader’s Journal_ turns raw trade notes into **actionable insights**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚀 Project Overview
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+Many traders maintain journals but rarely analyze them deeply. This leads to repeated mistakes, emotional decision-making, and inconsistent performance.
 
-## Expanding the ESLint configuration
+**The Trader’s Journal** solves this by:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Accepting structured trade entries
+- Analyzing behavioral and performance patterns
+- Providing clear, practical feedback to improve trading discipline
+
+This project is being built as part of an **AI application challenge**, with a focus on simplicity, usability, and real-world value.
+
+---
+
+## 🎯 Target Users
+
+- Retail traders
+- Beginner and intermediate traders
+- Anyone who journals trades but struggles to extract insights
+
+---
+
+## ✨ Key Features
+
+- 📊 Trade journal input (entry, exit, reasoning, emotions)
+- 🧠 AI-based analysis of:
+  - Recurring mistakes
+  - Emotional patterns
+  - Risk management issues
+
+- ✅ Actionable feedback and improvement suggestions
+- 🖥️ Clean, minimal web interface
+- ⚡ Fast responses optimized for frequent use
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** React (Vite)
+- **AI Layer:** LLM-based analysis (model selected for speed and cost efficiency)
+- **Styling:** CSS / Tailwind (optional)
+- **Deployment:** Modern cloud hosting (planned)
+
+> The architecture is designed to keep the AI layer modular, allowing easy experimentation with different models.
+
+---
+
+## 📂 Project Structure
+
+```
+├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── services/
+│   └── utils/
+├── public/
+├── .env.example
+├── .gitignore
+├── package.json
+└── README.md
+```
+
+---
+
+## ⚙️ Getting Started
+
+### 1️⃣ Clone the repository
+
+```bash
+git clone https://github.com/your-username/the-traders-journal.git
+cd the-traders-journal
+```
+
+### 2️⃣ Install dependencies
+
+```bash
+npm install
+```
+
+### 3️⃣ Set up environment variables
+
+Create a `.env` file based on `.env.example` and add your API keys.
+
+### 4️⃣ Run the project locally
+
+```bash
+npm run dev
+```
+
+---
+
+## 🧪 Current Status
+
+- ✅ Project scaffolded
+- ✅ UI prototype created
+- ✅ AI analysis flow tested
+- 🚧 Improving prompts and UX
+- 🚧 Expanding insights and feedback quality
+
+---
+
+## 🧠 Future Enhancements
+
+- Trade history dashboard
+- Performance metrics over time
+- Exportable reports
+- Emotion tracking trends
+- Multi-session analysis
+
+---
+
+## 📌 Disclaimer
+
+This tool is for **educational and analytical purposes only**.
+It does **not provide financial advice** or trading recommendations.
+
+---
+
+## 🤝 Contributing
+
+This is an early-stage project built during a challenge.
+Feedback and suggestions are welcome!
