@@ -234,6 +234,7 @@ function App() {
     if (reflectionStage < 7) {
       goToStep(reflectionStage + 1);
     } else {
+      if (isAnalyzing) return;
       const pnl =
         (parseFloat(reflectionData.exitPrice) -
           parseFloat(reflectionData.entryPrice)) *
@@ -247,6 +248,7 @@ function App() {
 
       setCurrentTrade(newTrade);
       setIsAnalyzing(true);
+      navigate("/analysis", { replace: true });
 
       const insights = await generateAIInsight(newTrade);
       newTrade.insights = insights;
@@ -254,7 +256,6 @@ function App() {
       setTrades([newTrade, ...trades]);
       setCurrentTrade(newTrade);
       setIsAnalyzing(false);
-      navigate("/analysis", { replace: true });
       setReflectionStage(0);
 
       setReflectionData({ ...DEFAULT_REFLECTION_DATA });
