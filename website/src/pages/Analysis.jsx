@@ -22,7 +22,7 @@ const Analysis = ({
             {currentTrade.pnl > 0 ? "✓ R1T2 ANALYZED" : "✗ R1T2 REVIEWED"}
           </h2>
           <p className="handwriting text-xl text-[#FF006E]">
-            what DeepSeek found in your trade
+            what R1T2 found in your trade
           </p>
         </div>
 

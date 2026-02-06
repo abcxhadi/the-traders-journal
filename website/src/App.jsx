@@ -101,6 +101,36 @@ const loadStoredTrades = () => {
   }
 };
 
+const QuestionnaireRouteWrapper = ({
+  step,
+  reflectionStage,
+  setReflectionStage,
+  reflectionData,
+  setReflectionData,
+  moveToNextStage,
+  goBack,
+  handleEmotionCheckbox,
+  setStage,
+}) => {
+  useEffect(() => {
+    if (reflectionStage !== step) {
+      setReflectionStage(step);
+    }
+  }, [reflectionStage, setReflectionStage, step]);
+
+  return (
+    <Questionnaire
+      reflectionData={reflectionData}
+      setReflectionData={setReflectionData}
+      moveToNextStage={moveToNextStage}
+      goBack={goBack}
+      handleEmotionCheckbox={handleEmotionCheckbox}
+      reflectionStage={step}
+      setStage={setStage}
+    />
+  );
+};
+
 function App() {
   const initialReflectionData = loadStoredReflectionData();
   const initialTrades = loadStoredTrades();
@@ -255,7 +285,7 @@ function App() {
     let content = `
 ╔════════════════════════════════════════════════╗
 ║     TRADER'S JOURNAL - AI TRADE ANALYSIS       ║
-║     Powered by DeepSeek R1T2 Chimera           ║
+║     Powered by R1T2                            ║
 ║     Generated: ${new Date().toLocaleString()}                  
 ╚════════════════════════════════════════════════╝
 
@@ -315,7 +345,7 @@ YOUR COMMITMENT:
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-AI COACHING ANALYSIS (DeepSeek R1T2 Chimera)
+AI COACHING ANALYSIS (R1T2)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ${
@@ -372,26 +402,6 @@ This trade is data. Use it.`;
     return { __html: htmlText };
   };
 
-  const QuestionnaireRoute = ({ step }) => {
-    useEffect(() => {
-      if (reflectionStage !== step) {
-        setReflectionStage(step);
-      }
-    }, [reflectionStage, step]);
-
-    return (
-      <Questionnaire
-        reflectionData={reflectionData}
-        setReflectionData={setReflectionData}
-        moveToNextStage={moveToNextStage}
-        goBack={goBack}
-        handleEmotionCheckbox={handleEmotionCheckbox}
-        reflectionStage={step}
-        setStage={setStage}
-      />
-    );
-  };
-
   return (
     <div className="indie-journal">
       <Routes>
@@ -418,14 +428,134 @@ This trade is data. Use it.`;
             />
           }
         />
-        <Route path="/numbers" element={<QuestionnaireRoute step={0} />} />
-        <Route path="/thesis" element={<QuestionnaireRoute step={1} />} />
-        <Route path="/before-entry" element={<QuestionnaireRoute step={2} />} />
-        <Route path="/in-trade" element={<QuestionnaireRoute step={3} />} />
-        <Route path="/exit" element={<QuestionnaireRoute step={4} />} />
-        <Route path="/confidence" element={<QuestionnaireRoute step={5} />} />
-        <Route path="/pattern" element={<QuestionnaireRoute step={6} />} />
-        <Route path="/commitment" element={<QuestionnaireRoute step={7} />} />
+        <Route
+          path="/numbers"
+          element={
+            <QuestionnaireRouteWrapper
+              step={0}
+              reflectionStage={reflectionStage}
+              setReflectionStage={setReflectionStage}
+              reflectionData={reflectionData}
+              setReflectionData={setReflectionData}
+              moveToNextStage={moveToNextStage}
+              goBack={goBack}
+              handleEmotionCheckbox={handleEmotionCheckbox}
+              setStage={setStage}
+            />
+          }
+        />
+        <Route
+          path="/thesis"
+          element={
+            <QuestionnaireRouteWrapper
+              step={1}
+              reflectionStage={reflectionStage}
+              setReflectionStage={setReflectionStage}
+              reflectionData={reflectionData}
+              setReflectionData={setReflectionData}
+              moveToNextStage={moveToNextStage}
+              goBack={goBack}
+              handleEmotionCheckbox={handleEmotionCheckbox}
+              setStage={setStage}
+            />
+          }
+        />
+        <Route
+          path="/before-entry"
+          element={
+            <QuestionnaireRouteWrapper
+              step={2}
+              reflectionStage={reflectionStage}
+              setReflectionStage={setReflectionStage}
+              reflectionData={reflectionData}
+              setReflectionData={setReflectionData}
+              moveToNextStage={moveToNextStage}
+              goBack={goBack}
+              handleEmotionCheckbox={handleEmotionCheckbox}
+              setStage={setStage}
+            />
+          }
+        />
+        <Route
+          path="/in-trade"
+          element={
+            <QuestionnaireRouteWrapper
+              step={3}
+              reflectionStage={reflectionStage}
+              setReflectionStage={setReflectionStage}
+              reflectionData={reflectionData}
+              setReflectionData={setReflectionData}
+              moveToNextStage={moveToNextStage}
+              goBack={goBack}
+              handleEmotionCheckbox={handleEmotionCheckbox}
+              setStage={setStage}
+            />
+          }
+        />
+        <Route
+          path="/exit"
+          element={
+            <QuestionnaireRouteWrapper
+              step={4}
+              reflectionStage={reflectionStage}
+              setReflectionStage={setReflectionStage}
+              reflectionData={reflectionData}
+              setReflectionData={setReflectionData}
+              moveToNextStage={moveToNextStage}
+              goBack={goBack}
+              handleEmotionCheckbox={handleEmotionCheckbox}
+              setStage={setStage}
+            />
+          }
+        />
+        <Route
+          path="/confidence"
+          element={
+            <QuestionnaireRouteWrapper
+              step={5}
+              reflectionStage={reflectionStage}
+              setReflectionStage={setReflectionStage}
+              reflectionData={reflectionData}
+              setReflectionData={setReflectionData}
+              moveToNextStage={moveToNextStage}
+              goBack={goBack}
+              handleEmotionCheckbox={handleEmotionCheckbox}
+              setStage={setStage}
+            />
+          }
+        />
+        <Route
+          path="/pattern"
+          element={
+            <QuestionnaireRouteWrapper
+              step={6}
+              reflectionStage={reflectionStage}
+              setReflectionStage={setReflectionStage}
+              reflectionData={reflectionData}
+              setReflectionData={setReflectionData}
+              moveToNextStage={moveToNextStage}
+              goBack={goBack}
+              handleEmotionCheckbox={handleEmotionCheckbox}
+              setStage={setStage}
+            />
+          }
+        />
+        <Route
+          path="/commitment"
+          element={
+            <QuestionnaireRouteWrapper
+              step={7}
+              reflectionStage={reflectionStage}
+              setReflectionStage={setReflectionStage}
+              reflectionData={reflectionData}
+              setReflectionData={setReflectionData}
+              moveToNextStage={moveToNextStage}
+              goBack={goBack}
+              handleEmotionCheckbox={handleEmotionCheckbox}
+              setStage={setStage}
+            />
+          }
+        />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>

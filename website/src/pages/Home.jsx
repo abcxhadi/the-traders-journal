@@ -30,8 +30,8 @@ const Home = ({ setStage, trades }) => {
               discipline. Your mistakes.
             </p>
             <p className="text-xs italic opacity-70">
-              <strong>8 questions. Honest answers.</strong> Then DeepSeek R1T2
-              shows what you missed.
+              <strong>8 questions. Honest answers.</strong> Then R1T2 shows what
+              you missed.
             </p>
           </div>
 
