@@ -27,7 +27,7 @@ const Home = ({ setStage, trades }) => {
 
             <p className="text-sm leading-relaxed mb-4">
               Every trade tells a story. Your thesis. Your fears. Your
-              discipline. Your fuck-ups.
+              discipline. Your mistakes.
             </p>
             <p className="text-xs italic opacity-70">
               <strong>8 questions. Honest answers.</strong> Then DeepSeek R1T2

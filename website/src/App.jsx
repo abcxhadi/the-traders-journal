@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Questionnaire from "./pages/Questionnaire";
 import Analysis from "./pages/Analysis";
@@ -7,12 +8,118 @@ import { generateAIInsight } from "./services/ai";
 import { playClickSound } from "./utils/sounds";
 import "./App.css";
 
+const DEFAULT_REFLECTION_DATA = {
+  thesis: "",
+  emotionEntering: "",
+  asset: "",
+  positionType: "long",
+  entryPrice: "",
+  exitPrice: "",
+  size: "",
+  duration: "",
+  emotionDuringTrade: "",
+  exitReason: "",
+  emotionNow: "",
+  confidenceRating: 7,
+  emotionCheckboxes: [],
+  pastPattern: "first",
+  patternNotes: "",
+  nextChange: "",
+};
+
+const STORAGE_KEYS = {
+  reflectionData: "ttj_reflection_data",
+  reflectionStep: "ttj_reflection_step",
+  trades: "ttj_trades",
+};
+
+const isBrowser = typeof window !== "undefined";
+
+const STEP_PATHS = [
+  "/numbers",
+  "/thesis",
+  "/before-entry",
+  "/in-trade",
+  "/exit",
+  "/confidence",
+  "/pattern",
+  "/commitment",
+];
+
+const PATH_TO_STEP = STEP_PATHS.reduce((acc, path, idx) => {
+  acc[path] = idx;
+  return acc;
+}, {});
+
+const normalizePath = (path) => {
+  if (!path) return "/";
+  if (path === "/") return "/";
+  return path.endsWith("/") ? path.slice(0, -1) : path;
+};
+
+const getEffectivePath = (locationPath) => {
+  const normalized = normalizePath(locationPath);
+  if (PATH_TO_STEP[normalized] !== undefined) return normalized;
+  if (isBrowser) {
+    const windowPath = normalizePath(window.location.pathname);
+    if (PATH_TO_STEP[windowPath] !== undefined) return windowPath;
+  }
+  return normalized;
+};
+
+const loadStoredReflectionData = () => {
+  if (!isBrowser) return { ...DEFAULT_REFLECTION_DATA };
+  const raw = window.localStorage.getItem(STORAGE_KEYS.reflectionData);
+  if (!raw) return { ...DEFAULT_REFLECTION_DATA };
+  try {
+    const parsed = JSON.parse(raw);
+    return { ...DEFAULT_REFLECTION_DATA, ...parsed };
+  } catch (error) {
+    return { ...DEFAULT_REFLECTION_DATA };
+  }
+};
+
+const loadStoredStep = () => {
+  if (!isBrowser) return null;
+  const raw = window.localStorage.getItem(STORAGE_KEYS.reflectionStep);
+  if (!raw) return null;
+  const parsed = parseInt(raw, 10);
+  if (Number.isNaN(parsed)) return null;
+  if (parsed < 0 || parsed > 7) return null;
+  return parsed;
+};
+
+const loadStoredTrades = () => {
+  if (!isBrowser) return [];
+  const raw = window.localStorage.getItem(STORAGE_KEYS.trades);
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    return [];
+  }
+};
+
 function App() {
-  const [stage, setStage] = useState("welcome");
-  const [trades, setTrades] = useState([]);
+  const initialReflectionData = loadStoredReflectionData();
+  const initialTrades = loadStoredTrades();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const initialPath = getEffectivePath(location.pathname);
+  const initialStepFromPath = PATH_TO_STEP[initialPath];
+
+  const [trades, setTrades] = useState(initialTrades);
   const [currentTrade, setCurrentTrade] = useState(null);
-  const [reflectionStage, setReflectionStage] = useState(0);
+  const [reflectionStage, setReflectionStage] = useState(() => {
+    if (initialStepFromPath !== undefined) return initialStepFromPath;
+    const stored = loadStoredStep();
+    return stored !== null ? stored : 0;
+  });
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [reflectionData, setReflectionData] = useState(
+    initialReflectionData,
+  );
 
   // Global click sound effect
   useEffect(() => {
@@ -34,28 +141,68 @@ function App() {
     };
   }, []);
 
-  const [reflectionData, setReflectionData] = useState({
-    thesis: "",
-    emotionEntering: "",
-    asset: "",
-    positionType: "long",
-    entryPrice: "",
-    exitPrice: "",
-    size: "",
-    duration: "",
-    emotionDuringTrade: "",
-    exitReason: "",
-    emotionNow: "",
-    confidenceRating: 7,
-    emotionCheckboxes: [],
-    pastPattern: "first",
-    patternNotes: "",
-    nextChange: "",
-  });
+  useEffect(() => {
+    if (!isBrowser) return;
+    window.localStorage.setItem(
+      STORAGE_KEYS.reflectionData,
+      JSON.stringify(reflectionData),
+    );
+  }, [reflectionData]);
+
+  useEffect(() => {
+    if (!isBrowser) return;
+    window.localStorage.setItem(
+      STORAGE_KEYS.reflectionStep,
+      String(reflectionStage),
+    );
+  }, [reflectionStage]);
+
+  useEffect(() => {
+    if (!isBrowser) return;
+    window.localStorage.setItem(
+      STORAGE_KEYS.trades,
+      JSON.stringify(trades),
+    );
+  }, [trades]);
+
+  useEffect(() => {
+    const path = getEffectivePath(location.pathname);
+    if (PATH_TO_STEP[path] !== undefined) {
+      setReflectionStage(PATH_TO_STEP[path]);
+    }
+  }, [location.pathname, navigate]);
+
+  const goToStep = (stepIndex) => {
+    const clamped = Math.max(0, Math.min(7, stepIndex));
+    setReflectionStage(clamped);
+    navigate(STEP_PATHS[clamped], { replace: true });
+  };
+
+  const setStage = (nextStage) => {
+    if (nextStage === "reflection-form") {
+      goToStep(0);
+      return;
+    }
+    if (nextStage === "history") {
+      navigate("/history", { replace: true });
+      return;
+    }
+    if (nextStage === "analysis") {
+      navigate("/analysis", { replace: true });
+      return;
+    }
+    navigate("/", { replace: true });
+  };
+
+  const clearReflectionDraft = () => {
+    if (!isBrowser) return;
+    window.localStorage.removeItem(STORAGE_KEYS.reflectionData);
+    window.localStorage.removeItem(STORAGE_KEYS.reflectionStep);
+  };
 
   const moveToNextStage = async () => {
     if (reflectionStage < 7) {
-      setReflectionStage(reflectionStage + 1);
+      goToStep(reflectionStage + 1);
     } else {
       const pnl =
         (parseFloat(reflectionData.exitPrice) -
@@ -69,8 +216,6 @@ function App() {
       };
 
       setCurrentTrade(newTrade);
-      setStage("analysis");
-      setReflectionStage(0);
       setIsAnalyzing(true);
 
       const insights = await generateAIInsight(newTrade);
@@ -79,33 +224,19 @@ function App() {
       setTrades([newTrade, ...trades]);
       setCurrentTrade(newTrade);
       setIsAnalyzing(false);
+      navigate("/analysis", { replace: true });
+      setReflectionStage(0);
 
-      setReflectionData({
-        thesis: "",
-        emotionEntering: "",
-        asset: "",
-        positionType: "long",
-        entryPrice: "",
-        exitPrice: "",
-        size: "",
-        duration: "",
-        emotionDuringTrade: "",
-        exitReason: "",
-        emotionNow: "",
-        confidenceRating: 7,
-        emotionCheckboxes: [],
-        pastPattern: "first",
-        patternNotes: "",
-        nextChange: "",
-      });
+      setReflectionData({ ...DEFAULT_REFLECTION_DATA });
+      clearReflectionDraft();
     }
   };
 
   const goBack = () => {
     if (reflectionStage > 0) {
-      setReflectionStage(reflectionStage - 1);
+      goToStep(reflectionStage - 1);
     } else {
-      setStage("welcome");
+      navigate("/", { replace: true });
     }
   };
 
@@ -241,45 +372,64 @@ This trade is data. Use it.`;
     return { __html: htmlText };
   };
 
-  const renderStage = () => {
-    switch (stage) {
-      case "reflection-form":
-        return (
-          <Questionnaire
-            reflectionData={reflectionData}
-            setReflectionData={setReflectionData}
-            moveToNextStage={moveToNextStage}
-            goBack={goBack}
-            handleEmotionCheckbox={handleEmotionCheckbox}
-            reflectionStage={reflectionStage}
-            setStage={setStage}
-          />
-        );
-      case "analysis":
-        return (
-          <Analysis
-            currentTrade={currentTrade}
-            isAnalyzing={isAnalyzing}
-            setStage={setStage}
-            downloadTrade={downloadTrade}
-            renderMarkdownContent={renderMarkdownContent}
-          />
-        );
-      case "history":
-        return (
-          <History
-            trades={trades}
-            setCurrentTrade={setCurrentTrade}
-            setStage={setStage}
-          />
-        );
-      case "welcome":
-      default:
-        return <Home setStage={setStage} trades={trades} />;
-    }
+  const QuestionnaireRoute = ({ step }) => {
+    useEffect(() => {
+      if (reflectionStage !== step) {
+        setReflectionStage(step);
+      }
+    }, [reflectionStage, step]);
+
+    return (
+      <Questionnaire
+        reflectionData={reflectionData}
+        setReflectionData={setReflectionData}
+        moveToNextStage={moveToNextStage}
+        goBack={goBack}
+        handleEmotionCheckbox={handleEmotionCheckbox}
+        reflectionStage={step}
+        setStage={setStage}
+      />
+    );
   };
 
-  return <div className="indie-journal">{renderStage()}</div>;
+  return (
+    <div className="indie-journal">
+      <Routes>
+        <Route path="/" element={<Home setStage={setStage} trades={trades} />} />
+        <Route
+          path="/history"
+          element={
+            <History
+              trades={trades}
+              setCurrentTrade={setCurrentTrade}
+              setStage={setStage}
+            />
+          }
+        />
+        <Route
+          path="/analysis"
+          element={
+            <Analysis
+              currentTrade={currentTrade}
+              isAnalyzing={isAnalyzing}
+              setStage={setStage}
+              downloadTrade={downloadTrade}
+              renderMarkdownContent={renderMarkdownContent}
+            />
+          }
+        />
+        <Route path="/numbers" element={<QuestionnaireRoute step={0} />} />
+        <Route path="/thesis" element={<QuestionnaireRoute step={1} />} />
+        <Route path="/before-entry" element={<QuestionnaireRoute step={2} />} />
+        <Route path="/in-trade" element={<QuestionnaireRoute step={3} />} />
+        <Route path="/exit" element={<QuestionnaireRoute step={4} />} />
+        <Route path="/confidence" element={<QuestionnaireRoute step={5} />} />
+        <Route path="/pattern" element={<QuestionnaireRoute step={6} />} />
+        <Route path="/commitment" element={<QuestionnaireRoute step={7} />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </div>
+  );
 }
 
 export default App;

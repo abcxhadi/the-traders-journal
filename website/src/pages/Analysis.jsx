@@ -114,7 +114,7 @@ const Analysis = ({
                 size={48}
               />
               <p className="handwriting text-2xl text-[#FF006E]">
-                R1T2 is reading your bullshit...
+                R1T2 is reading your reflection...
               </p>
               <p className="text-xs opacity-50 mt-2">
                 This takes 10-15 seconds
