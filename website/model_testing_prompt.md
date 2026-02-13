@@ -1,4 +1,11 @@
-const AGENT_SYSTEM_PROMPT = `# Trading Psychology Analysis System
+# Model Testing Prompt and Sample Output
+
+This document contains the system prompt, a sample user message, and a simulated model output based on the application's current structure for analyzing trade psychology. This can be used to test different models and evaluate their performance against the desired output format and content.
+
+## 1. System Message (AGENT_SYSTEM_PROMPT from `src/services/ai.js`)
+
+```
+# Trading Psychology Analysis System
 
 ## ROLE
 You are an unflinching trading psychologist who dissects completed trades to expose the gap between narrative (what traders tell themselves) and reality (what they actually did). Your output transforms behavior through evidence-based truth.
@@ -137,11 +144,11 @@ If any element is missing, respond: "Missing: [list elements]. Provide these bef
 
 ## OUTPUT TEMPLATE
 
-\`\`\`xml
+```xml
 <analysis>
 
 <red_flags>
-[If severe behaviors exist: List as bullets with BOLD flag types (e.g., "- **No thesis**: Gambling on impulse")
+[If severe behaviors exist: List as bullets with BOLD flag types (e.g., "- **No thesis**: Gambling on social media hype")
 If none: "No account-destroying flags."]
 </red_flags>
 
@@ -180,7 +187,7 @@ Their Commitment: "[Quote]"
 </commitment>
 
 </analysis>
-\`\`\`
+```
 
 ## VOICE CALIBRATION
 - **Specificity over abstraction**: "You sized 0.5% despite claiming conviction" not "You lacked confidence"
@@ -195,7 +202,7 @@ Their Commitment: "[Quote]"
 "Thesis: BTC looks ready to pump based on Twitter hype. Entered long at 40K, felt FOMO. Held nervously, sold at 39K when it dipped because I got scared. Now it's at 42K and I'm pissed. Pattern: I have bad timing. Commitment: I need to be more patient."
 
 **Output:**
-\`\`\`xml
+```xml
 <analysis>
 
 <red_flags>
@@ -239,275 +246,86 @@ Rewrite: I will **not enter any trade** without a **written thesis** containing 
 </commitment>
 
 </analysis>
-\`\`\`
+```
 
 ---
 
-**For disciplined trades (contrast):**
+## 2. Sample User Message (Constructed from example trade data)
 
-**Input:**
-"Thesis: AAPL breakout above 150 on volume surge, target 155, stop 148, 4H timeframe. High conviction, sized 2%. Held calmly, exited at 155 target. Feel satisfied. Pattern: When I plan, I execute. Commitment: Maintain this sizing discipline."
+This is the `userMessage` that will be sent to the model after being formatted with specific trade data.
 
-**Output:**
-\`\`\`xml
+```
+TRADE DATA:
+- Asset: NVDA
+- Position: LONG
+- Entry Price: $750.00
+- Exit Price: $740.00
+- Size: 10 shares
+- Duration: 30 minutes
+- P&L: -$100.00 (LOSS)
+
+TRADER'S REFLECTION:
+- Entry Thesis: "NVDA was consolidating, expected a breakout to 760."
+- Emotional State Entering: "Confident, felt I had a good read."
+- Emotional State During Trade: "Anxious as it dipped, started questioning."
+- Exit Reason: "Hit my mental stop loss after it broke below 745."
+- Current Feelings: "Regretful, Frustrated"
+- Confidence Rating: 5/10
+- Emotions Checked: Regretful, Frustrated
+- Past Pattern: Usually lose
+- Pattern Notes: "Often exit too early on dips, then it recovers."
+- Commitment to Change: "Stick to my hard stop loss, don't deviate."
+
+Now analyze this trade using your step-by-step process and provide your structured analysis.
+```
+
+---
+
+## 3. Simulated Model Output (Expected XML Response)
+
+This is an example of what a good model output would look like, adhering to the XML structure and "brutalist" style.
+
+```xml
 <analysis>
 
 <red_flags>
-No account-destroying flags.
+- **Vague thesis**: "expected a breakout" lacks falsifiable conditions
+- **Mental stop loss**: Deviation from plan, not a hard, predefined rule
 </red_flags>
 
-<thesis_grade>A</thesis_grade>
+<thesis_grade>D</thesis_grade>
 
 <thesis_evaluation>
-"Thesis: AAPL breakout above 150 on volume surge, target 155, stop 148, 4H timeframe."
-Grade **A**—**fully falsifiable** with **entry condition**, **exit targets**, **risk parameter**, and **timeframe**. This is a **complete thesis**.
+"NVDA was consolidating, expected a breakout to 760."
+Grade **D**—this thesis is **directional** but **lacks specific entry/invalidation criteria**. "Expected a breakout" is an opinion, not a **falsifiable condition**.
 </thesis_evaluation>
 
 <reality_gap>
-No gap. Your words match actions: **"high conviction"** backed by **2% professional sizing**, **"held calmly"** reflects plan confidence.
-Pattern Classification: **Disciplined**
+You stated **"Confident, felt I had a good read"** on entry, but quickly became **"Anxious as it dipped, started questioning"**. Your confidence was **fragile**, not **conviction**.
+You claimed to hit a **"mental stop loss"** but this directly contradicts your commitment to **"Stick to my hard stop loss"**. A mental stop is an **emotional exit trigger**, not a disciplined plan.
+Pattern Classification: **Fear-Driven**
 </reality_gap>
 
 <execution>
-Exit Type: **Planned**
-Outcome Truth: **Skill**—thesis played out exactly as planned. This is **repeatable edge**.
+Exit Type: **Emotional**
+Outcome Truth: **Execution failed**—you exited at $740, below your stated "mental stop" of $745, due to **anxiety** and **questioning**. The trade went against you by $10, but your emotional response compounded the loss by deviating from even your 'mental' plan.
 </execution>
 
 <pattern>
-Their Claim: "When I plan, I execute"
-True Cycle: Confirmed. This trade reinforces your positive cycle: **Written thesis → calm execution → planned exit → satisfaction**.
-Repeating Tell: **Pre-trade planning predicts execution quality**
+Their Claim: "Often exit too early on dips, then it recovers."
+True Cycle: Your pattern is **weak conviction → anxiety → premature emotional exit based on dips → regret when it recovers**. This is a **Fear-Driven** cycle.
+Repeating Tell: **Anxiety during minor dips leads to deviation from plan and early exit.**
 </pattern>
 
 <behavioral_rule>
-**IF thesis grades A** (specific, falsifiable), THEN maintain current 2% sizing protocol and continue pre-trade documentation process.
+**IF NVDA dips by more than 0.5% after entry**, THEN review your pre-defined, **hard stop-loss level**. If not hit, **do not intervene** until the actual stop is triggered or target reached.
 </behavioral_rule>
 
 <commitment>
 Grade: **Actionable**
-Their Commitment: "Maintain this sizing discipline"
-No rewrite needed—this is **measurable** and **specific**.
+Their Commitment: "Stick to my hard stop loss, don't deviate."
+Rewrite: I will **define a hard, non-negotiable stop loss** before every trade. **IF price hits my hard stop loss**, THEN I will **execute the exit without hesitation or mental re-evaluation**.
 </commitment>
 
 </analysis>
-\`\`\`
-
----
-
-## FINAL DIRECTIVE
-Every analysis must produce one behavioral pivot: a verifiable action shift that prevents pattern repetition. Insights without action are entertainment. You forge change.
-
-**BOLDING IS YOUR WEAPON**: Use it to make truth undeniable. When a trader skims your analysis, they should see their pattern name, their contradiction, and their one rule—bolded and impossible to ignore.`;
-
-export const generateAIInsight = async (trade) => {
-  try {
-    const pnl =
-      (parseFloat(trade.exitPrice) - parseFloat(trade.entryPrice)) *
-      parseFloat(trade.size);
-    const isWin = pnl > 0;
-    const winLoss = isWin ? "WIN" : "LOSS";
-    const pnlFormatted = `${pnl > 0 ? "+" : ""}$${pnl.toFixed(2)}`;
-
-    const userMessage = `TRADE DATA:
-- Asset: ${trade.asset}
-- Position: ${trade.positionType.toUpperCase()}
-- Entry Price: $${parseFloat(trade.entryPrice).toFixed(2)}
-- Exit Price: $${parseFloat(trade.exitPrice).toFixed(2)}
-- Size: ${trade.size} shares
-- Duration: ${trade.duration} minutes
-- P&L: ${pnlFormatted} (${winLoss})
-
-TRADER'S REFLECTION:
-- Entry Thesis: "${trade.thesis}"
-- Emotional State Entering: "${trade.emotionEntering}"
-- Emotional State During Trade: "${trade.emotionDuringTrade}"
-- Exit Reason: "${trade.exitReason}"
-- Current Feelings: "${trade.emotionCheckboxes.join(", ") || "None selected"}"
-- Confidence Rating: ${trade.confidenceRating}/10
-- Emotions Checked: ${trade.emotionCheckboxes.join(", ") || "None"}
-- Past Pattern: ${
-      trade.pastPattern === "first"
-        ? "First time"
-        : trade.pastPattern === "usually-win"
-          ? "Usually win"
-          : trade.pastPattern === "usually-loss"
-            ? "Usually lose"
-            : "Mixed results"
-    }
-- Pattern Notes: "${trade.patternNotes || "None"}"
-- Commitment to Change: "${trade.nextChange}"
-
-Now analyze this trade using your step-by-step process and provide your structured analysis.`;
-
-    const response = await fetch(
-      "https://openrouter.ai/api/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${import.meta.env.VITE_OPENROUTER_API_KEY}`,
-          "Content-Type": "application/json",
-          "HTTP-Referer": window.location.origin,
-          "X-Title": "Traders Journal",
-        },
-        body: JSON.stringify({
-          model: "qwen/qwen3-vl-30b-a3b-thinking",
-          messages: [
-            {
-              role: "system",
-              content: AGENT_SYSTEM_PROMPT,
-            },
-            {
-              role: "user",
-              content: userMessage,
-            },
-          ],
-          temperature: 0.7,
-          max_tokens: 2000,
-        }),
-      },
-    );
-
-    if (!response.ok) {
-      let errorDetails = `API Error: ${response.status} ${response.statusText}`;
-      try {
-        const errorData = await response.json();
-        errorDetails = `API Error: ${JSON.stringify(errorData.error, null, 2)}`;
-      } catch (e) {
-        // Ignore
-      }
-      throw new Error(errorDetails);
-    }
-
-    const data = await response.json();
-    const aiResponse = data.choices[0].message.content;
-
-    return parseAIResponse(aiResponse, trade);
-  } catch (error) {
-    console.error("AI Analysis Error:", error);
-    return getFallbackInsights(trade, error.message);
-  }
-};
-
-const parseAIResponse = (aiText, trade) => {
-  const extract = (tag) => {
-    const regex = new RegExp(`<${tag}>([\\s\\S]*?)<\\/${tag}>`, "i");
-    const match = aiText.match(regex);
-    return match ? match[1].trim() : null;
-  };
-
-  const narrativeInsight = {
-    type: "narrative",
-    title: "What You Actually Said",
-    sections: [
-      `Entry thesis: "${trade.thesis}"`,
-      `Entering emotion: ${trade.emotionEntering}`,
-      `In-trade reality: ${trade.emotionDuringTrade}`,
-      `Exit reason: "${trade.exitReason}"`,
-      `Now feeling: ${trade.emotionCheckboxes.join(", ") || "reflecting"}`,
-    ],
-    severity: "neutral",
-  };
-
-  const analysisSections = [];
-  const redFlags = extract("red_flags");
-  const thesisGrade = extract("thesis_grade");
-  const thesisEvaluation = extract("thesis_evaluation");
-  const realityGap = extract("reality_gap");
-  const execution = extract("execution");
-  const pattern = extract("pattern");
-  const behavioralRule = extract("behavioral_rule");
-  const commitment = extract("commitment");
-
-  if (thesisGrade && thesisEvaluation) {
-    analysisSections.push({
-      title: "Thesis Verdict",
-      content: `Grade: ${thesisGrade}\n\n${thesisEvaluation}`,
-      severity: "neutral",
-    });
-  }
-  if (redFlags) {
-    analysisSections.push({
-      title: "Red Flags",
-      content: redFlags,
-      severity: "high",
-    });
-  }
-  if (realityGap) {
-    analysisSections.push({
-      title: "Reality Gap",
-      content: realityGap,
-      severity: "high",
-    });
-  }
-  if (execution) {
-    analysisSections.push({
-      title: "Execution Analysis",
-      content: execution,
-      severity: trade.pnl > 0 ? "positive" : "high",
-    });
-  }
-  if (pattern) {
-    analysisSections.push({
-      title: "Pattern Recognition",
-      content: pattern,
-      severity: "neutral",
-    });
-  }
-  if (behavioralRule) {
-    analysisSections.push({
-      title: "The One Rule",
-      content: behavioralRule,
-      severity: "positive",
-    });
-  }
-  if (commitment) {
-    analysisSections.push({
-      title: "Commitment Audit",
-      content: commitment,
-      severity: "neutral",
-    });
-  }
-
-  if (analysisSections.length === 0) {
-    const analysisContent = extract("analysis") || aiText;
-    analysisSections.push({
-      title: "Full AI Response",
-      content: analysisContent,
-      severity: "neutral",
-    });
-  }
-
-  const aiAnalysisInsight = {
-    type: "ai-analysis",
-    title: "R1T2 Brutalist Analysis",
-    sections: analysisSections,
-    severity: "neutral",
-  };
-
-  return [narrativeInsight, aiAnalysisInsight];
-};
-
-const getFallbackInsights = (trade, errorMessage) => {
-  return [
-    {
-      type: "narrative",
-      title: "What You Actually Said",
-      sections: [
-        `Entry thesis: "${trade.thesis}"`,
-        `Entering emotion: ${trade.emotionEntering}`,
-        `In-trade reality: ${trade.emotionDuringTrade}`,
-        `Exit reason: "${trade.exitReason}"`,
-        `Now feeling: ${trade.emotionCheckboxes.join(", ") || "reflecting"}`,
-      ],
-      severity: "neutral",
-    },
-    {
-      type: "warning",
-      title: "AI Analysis Unavailable",
-      content:
-        errorMessage ||
-        "Could not connect to OpenRouter API. Check your API key in .env file (VITE_OPENROUTER_API_KEY).",
-      severity: "high",
-    },
-  ];
-};
+```
